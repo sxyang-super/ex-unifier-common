@@ -190,16 +190,8 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>ex-unifier-common</name>
+            <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/sxyang-super/ex-unifier-common</url>
         </repository>
     </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>github</id>
-            <name>ex-unifier-common</name>
-            <url>https://maven.pkg.github.com/sxyang-super/ex-unifier-common</url>
-        </repository>
-    </repositories>
 </project>
