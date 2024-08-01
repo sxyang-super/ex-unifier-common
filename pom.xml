@@ -12,11 +12,12 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.jupiter.version>5.11.0-RC1</junit.jupiter.version>
+        <slf4j.version>2.1.0-alpha1</slf4j.version>
         <maven.encoding>UTF-8</maven.encoding>
     </properties>
 
     <dependencies>
-        <!-- Test related -->
+        <!-- test related -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -29,27 +30,32 @@
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- compile -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.34</version> <!-- Use the latest stable version -->
             <scope>provided</scope>
         </dependency>
+
+        <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.1.0-alpha1</version> <!-- Use the latest stable version -->
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.1.0-alpha1</version> <!-- Use the latest stable version -->
+            <version>${slf4j.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- default plugins -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -68,6 +74,8 @@
                     <encoding>${maven.encoding}</encoding>
                 </configuration>
             </plugin>
+
+            <!-- test related plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -93,6 +101,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- code quality and analysis -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -141,6 +151,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- dependency management -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -159,6 +171,8 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.17.1</version>
             </plugin>
+
+            <!-- security -->
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
@@ -169,13 +183,6 @@
                     <dataDirectory>${project.build.directory}/dependency-check-data</dataDirectory>
                     <failBuildOnCVSS>7</failBuildOnCVSS>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
