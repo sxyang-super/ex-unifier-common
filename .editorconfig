@@ -1,28 +1,11 @@
-# EditorConfig is awesome: https://EditorConfig.org
+# This file is for unifying the coding style for different editors and IDEs
+# See editorconfig.org
 
-# Root of the EditorConfig configuration
 root = true
 
-# Java files
 [*.java]
 indent_style = space
 indent_size = 4
-tab_width = 4
-
-# Markdown files
-[*.md]
-indent_style = space
-indent_size = 2
-tab_width = 2
-
-# XML files
-[*.xml]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# All files
-[*]
 end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
