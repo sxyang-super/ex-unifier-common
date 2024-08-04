@@ -11,19 +11,23 @@ public interface IExceptionSupplier<E extends BaseException> {
 
     E newEWithCauseAndData(Throwable cause, Object data, Object... args);
 
-    default Supplier<BaseException> newESupplier(Object... args) {
+    default Supplier<BaseException> newESupplier(final Object... args) {
         return () -> newE(args);
     }
 
-    default Supplier<BaseException> newEWithCauseSupplier(Throwable cause, Object... args) {
+    default Supplier<BaseException> newEWithCauseSupplier(final Throwable cause, final Object... args) {
         return () -> newEWithCause(cause, args);
     }
 
-    default Supplier<BaseException> newEWithDataSupplier(Object data, Object... args) {
+    default Supplier<BaseException> newEWithDataSupplier(final Object data, final Object... args) {
         return () -> newEWithData(data, args);
     }
 
-    default Supplier<BaseException> newEWithCauseAndDataSupplier(Throwable cause, Object data, Object... args) {
+    default Supplier<BaseException> newEWithCauseAndDataSupplier(
+        final Throwable cause,
+        final Object data,
+        final Object... args
+    ) {
         return () -> newEWithCauseAndData(cause, data, args);
     }
 }

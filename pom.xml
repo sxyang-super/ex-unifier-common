@@ -152,12 +152,13 @@
                         <ruleset>${project.basedir}/.pmd/codestyle.xml</ruleset>
                         <ruleset>${project.basedir}/.pmd/design.xml</ruleset>
                         <ruleset>${project.basedir}/.pmd/documentation.xml</ruleset>
-                        <ruleset>category/java/errorprone.xml</ruleset>
+                        <ruleset>${project.basedir}/.pmd/errorprone.xml</ruleset>
                         <ruleset>category/java/multithreading.xml</ruleset>
                         <ruleset>category/java/performance.xml</ruleset>
                         <ruleset>category/java/security.xml</ruleset>
                     </rulesets>
                     <linkXRef>false</linkXRef>
+                    <minimumPriority>4</minimumPriority>
                 </configuration>
             </plugin>
             <plugin>

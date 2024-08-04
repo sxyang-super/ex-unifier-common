@@ -3,74 +3,61 @@ package com.sxyangsuper.exunifier.common;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import static com.sxyangsuper.exunifier.common.AssertUtil.doesNotMatch;
+import static com.sxyangsuper.exunifier.common.AssertUtil.isNotCharSequenceOrBlank;
+import static com.sxyangsuper.exunifier.common.AssertUtil.isNotCharSequenceOrNotBlank;
+
 public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E> {
 
     @Contract("_->fail")
-    default void throwE(Object... args) {
+    default void throwE(final Object... args) {
         throw newE(args);
     }
 
     @Contract("_,_->fail")
-    default void throwEWithCause(Throwable cause, Object... args) {
+    default void throwEWithCause(final Throwable cause, final Object... args) {
         throw newEWithCause(cause, args);
     }
 
     @Contract("_,_->fail")
-    default void throwEWithData(Object data, Object... args) {
+    default void throwEWithData(final Object data, final Object... args) {
         throw newEWithData(data, args);
     }
 
     @Contract("_,_,_->fail")
     default void throwEWithCauseAndData(
-        Throwable cause,
-        Object data,
-        Object... args
+        final Throwable cause,
+        final Object data,
+        final Object... args
     ) {
         throw newEWithCauseAndData(cause, data, args);
     }
 
-    // assert not null
-
-    @Contract("null,_->fail")
-    default void assertNotNull(Object target, Object... args) {
-        Optional.ofNullable(target).orElseThrow(() -> newE(args));
-    }
-
-    @Contract("null,_,_->fail")
-    default void assertNotNullWithData(
-        Object target,
-        Object data,
-        Object... args
-    ) {
-        Optional.ofNullable(target).orElseThrow(() -> newEWithData(data, args));
-    }
-
     @Contract("null,_->fail; !null,_->!null")
-    default <T> T assertNotNullAndReturn(T target, Object... args) {
+    default <T> T assertNotNull(final T target, final Object... args) {
         return Optional.ofNullable(target).orElseThrow(() -> newE(args));
     }
 
     @Contract("null,_,_->fail; !null,_,_->!null")
-    default <T> T assertNotNullWithDataAndReturn(
-        T target,
-        Object data,
-        Object... args
+    default <T> T assertNotNullWithData(
+        final T target,
+        final Object data,
+        final Object... args
     ) {
         return Optional.ofNullable(target).orElseThrow(() -> newEWithData(data, args));
     }
 
     @Contract("null,_,_->fail; !null,_,_->!null")
-    default <T> T assertNotNullWithDataSupplierAndReturn(
-        T target,
-        Supplier<Object> dataSupplier,
-        Object... args
+    default <T> T assertNotNullWithDataSupplier(
+        final T target,
+        final Supplier<Object> dataSupplier,
+        final Object... args
     ) {
         return Optional.ofNullable(target).orElseThrow(() -> newEWithData(dataSupplier.get(), args));
     }
@@ -78,7 +65,7 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     // assert null
 
     @Contract("!null,_->fail")
-    default void assertNull(Object target, Object... args) {
+    default void assertNull(final Object target, final Object... args) {
         Optional.ofNullable(target).ifPresent(nonNullTarget -> {
             throw newE(args);
         });
@@ -86,9 +73,9 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     @Contract("!null,_,_->fail")
     default void assertNullWithData(
-        Object target,
-        Object data,
-        Object... args
+        final Object target,
+        final Object data,
+        final Object... args
     ) {
         Optional.ofNullable(target).ifPresent(nonNullTarget -> {
             throw newEWithData(data, args);
@@ -98,7 +85,7 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     // assert true
 
     @Contract("false,_->fail")
-    default void assertTrue(Boolean target, Object... args) {
+    default void assertTrue(final Boolean target, final Object... args) {
         if (!Boolean.TRUE.equals(target)) {
             throw newE(args);
         }
@@ -106,9 +93,9 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     @Contract("false,_,_->fail")
     default void assertTrueWithData(
-        Boolean target,
-        Object data,
-        Object... args
+        final Boolean target,
+        final Object data,
+        final Object... args
     ) {
         if (!Boolean.TRUE.equals(target)) {
             throw newEWithData(data, args);
@@ -118,7 +105,7 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     // assert false
 
     @Contract("true,_->fail")
-    default void assertFalse(Boolean target, Object... args) {
+    default void assertFalse(final Boolean target, final Object... args) {
         if (!Boolean.FALSE.equals(target)) {
             throw newE(args);
         }
@@ -126,9 +113,9 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     @Contract("true,_,_->fail")
     default void assertFalseWithData(
-        Boolean target,
-        Object data,
-        Object... args
+        final Boolean target,
+        final Object data,
+        final Object... args
     ) {
         if (!Boolean.FALSE.equals(target)) {
             throw newEWithData(data, args);
@@ -138,9 +125,9 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     // assert equal
 
     default void assertEqual(
-        Object source,
-        Object target,
-        Object... args
+        final Object source,
+        final Object target,
+        final Object... args
     ) {
         if (ObjectUtil.notEqual(source, target)) {
             throw newE(args);
@@ -148,10 +135,10 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     default void assertEqualWithData(
-        Object source,
-        Object target,
-        Object data,
-        Object... args
+        final Object source,
+        final Object target,
+        final Object data,
+        final Object... args
     ) {
         if (ObjectUtil.notEqual(source, target)) {
             throw newEWithData(data, args);
@@ -161,9 +148,9 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     // assert not equal
 
     default void assertNotEqual(
-        Object source,
-        Object target,
-        Object... args
+        final Object source,
+        final Object target,
+        final Object... args
     ) {
         if (ObjectUtil.equal(source, target)) {
             throw newE(args);
@@ -171,10 +158,10 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     default void assertNotEqualWithData(
-        Object source,
-        Object target,
-        Object data,
-        Object... args
+        final Object source,
+        final Object target,
+        final Object data,
+        final Object... args
     ) {
         if (ObjectUtil.equal(source, target)) {
             throw newEWithData(data, args);
@@ -183,27 +170,9 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     // assert not blank
 
-    @Contract("null,_->fail")
-    default void assertNotBlank(Object target, Object... args) {
-        if (!(target instanceof CharSequence) || StrUtil.isBlank((CharSequence) target)) {
-            throw newE(args);
-        }
-    }
-
-    @Contract("null,_,_->fail")
-    default void assertNotBlankWithData(
-        Object target,
-        Object data,
-        Object... args
-    ) {
-        if (!(target instanceof CharSequence) || StrUtil.isBlank((CharSequence) target)) {
-            throw newEWithData(data, args);
-        }
-    }
-
     @Contract("null,_-> fail;!null,_->!null")
-    default <T extends CharSequence> T assertNotBlankAndReturn(Object target, Object... args) {
-        if (!(target instanceof CharSequence) || StrUtil.isBlank((CharSequence) target)) {
+    default <T extends CharSequence> T assertNotBlank(final Object target, final Object... args) {
+        if (isNotCharSequenceOrBlank(target)) {
             throw newE(args);
         }
         //noinspection unchecked
@@ -211,12 +180,12 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("null,_,_-> fail;!null,_,_->!null")
-    default <T extends CharSequence> T assertNotBlankWithDataAndReturn(
-        Object target,
-        Object data,
-        Object... args
+    default <T extends CharSequence> T assertNotBlankWithData(
+        final Object target,
+        final Object data,
+        final Object... args
     ) {
-        if (!(target instanceof CharSequence) || StrUtil.isBlank((CharSequence) target)) {
+        if (isNotCharSequenceOrBlank(target)) {
             throw newEWithData(data, args);
         }
         //noinspection unchecked
@@ -224,12 +193,12 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("null,_,_-> fail;!null,_,_->!null")
-    default <T extends CharSequence> T assertNotBlankWithDataSupplierAndReturn(
-        Object target,
-        Supplier<Object> dataSupplier,
-        Object... args
+    default <T extends CharSequence> T assertNotBlankWithDataSupplier(
+        final Object target,
+        final Supplier<Object> dataSupplier,
+        final Object... args
     ) {
-        if (!(target instanceof CharSequence) || StrUtil.isBlank((CharSequence) target)) {
+        if (isNotCharSequenceOrBlank(target)) {
             throw newEWithData(dataSupplier.get(), args);
         }
         //noinspection unchecked
@@ -238,48 +207,32 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     // assert blank
 
-    default void assertBlank(Object target, Object... args) {
-        if (!(target instanceof CharSequence) || !StrUtil.isBlank((CharSequence) target)) {
-            throw newE(args);
-        }
-    }
-
-    default void assertBlankWithData(
-        Object target,
-        Object data,
-        Object... args
-    ) {
-        if (!(target instanceof CharSequence) || !StrUtil.isBlank((CharSequence) target)) {
-            throw newEWithData(data, args);
-        }
-    }
-
-    default <T extends CharSequence> T assertBlankAndReturn(Object target, Object... args) {
-        if (!(target instanceof CharSequence) || !StrUtil.isBlank((CharSequence) target)) {
+    default <T extends CharSequence> T assertBlank(final Object target, final Object... args) {
+        if (isNotCharSequenceOrNotBlank(target)) {
             throw newE(args);
         }
         //noinspection unchecked
         return (T) target;
     }
 
-    default <T extends CharSequence> T assertBlankWithDataAndReturn(
-        Object target,
-        Object data,
-        Object... args
+    default <T extends CharSequence> T assertBlankWithData(
+        final Object target,
+        final Object data,
+        final Object... args
     ) {
-        if (!(target instanceof CharSequence) || !StrUtil.isBlank((CharSequence) target)) {
+        if (isNotCharSequenceOrNotBlank(target)) {
             throw newEWithData(data, args);
         }
         //noinspection unchecked
         return (T) target;
     }
 
-    default <T extends CharSequence> T assertBlankWithDataSupplierAndReturn(
-        Object target,
-        Supplier<Object> dataSupplier,
-        Object... args
+    default <T extends CharSequence> T assertBlankWithDataSupplier(
+        final Object target,
+        final Supplier<Object> dataSupplier,
+        final Object... args
     ) {
-        if (!(target instanceof CharSequence) || !StrUtil.isBlank((CharSequence) target)) {
+        if (isNotCharSequenceOrNotBlank(target)) {
             throw newEWithData(dataSupplier.get(), args);
         }
         //noinspection unchecked
@@ -288,36 +241,13 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     // assert matches
 
-    @Contract("null,_,_->fail;_,null,_->fail")
-    default void assertMatches(
-        CharSequence target,
-        Pattern pattern,
-        Object... args
-    ) {
-        if (pattern == null || target == null || !pattern.matcher(target).matches()) {
-            throw newE(args);
-        }
-    }
-
-    @Contract("null,_,_,_->fail;_,null,_,_->fail")
-    default void assertMatchesWithData(
-        CharSequence target,
-        Pattern pattern,
-        Object data,
-        Object... args
-    ) {
-        if (pattern == null || target == null || !pattern.matcher(target).matches()) {
-            throw newEWithData(data, args);
-        }
-    }
-
     @Contract("null,_,_->fail;_,null,_->fail;!null,_,_->!null")
-    default <T extends CharSequence> T assertMatchesAndReturn(
-        CharSequence target,
-        Pattern pattern,
-        Object... args
+    default <T extends CharSequence> T assertMatches(
+        final CharSequence target,
+        final Pattern pattern,
+        final Object... args
     ) {
-        if (pattern == null || target == null || !pattern.matcher(target).matches()) {
+        if (doesNotMatch(pattern, target)) {
             throw newE(args);
         }
         //noinspection unchecked
@@ -325,13 +255,13 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("null,_,_,_->fail;_,null,_,_->fail;!null,_,_,_->!null")
-    default <T extends CharSequence> T assertMatchesWithDataAndReturn(
-        CharSequence target,
-        Pattern pattern,
-        Object data,
-        Object... args
+    default <T extends CharSequence> T assertMatchesWithData(
+        final CharSequence target,
+        final Pattern pattern,
+        final Object data,
+        final Object... args
     ) {
-        if (pattern == null || target == null || !pattern.matcher(target).matches()) {
+        if (doesNotMatch(pattern, target)) {
             throw newEWithData(data, args);
         }
         //noinspection unchecked
@@ -339,13 +269,13 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("null,_,_,_->fail;_,null,_,_->fail;!null,_,_,_->!null")
-    default <T extends CharSequence> T assertMatchesWithDataSupplierAndReturn(
-        CharSequence target,
-        Pattern pattern,
-        Supplier<Object> dataSupplier,
-        Object... args
+    default <T extends CharSequence> T assertMatchesWithDataSupplier(
+        final CharSequence target,
+        final Pattern pattern,
+        final Supplier<Object> dataSupplier,
+        final Object... args
     ) {
-        if (pattern == null || target == null || !pattern.matcher(target).matches()) {
+        if (doesNotMatch(pattern, target)) {
             throw newEWithData(dataSupplier.get(), args);
         }
         //noinspection unchecked
@@ -354,34 +284,13 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     // assert not matches
 
-    default void assertNotMatches(
-        CharSequence target,
-        Pattern pattern,
-        Object... args
-    ) {
-        if (pattern != null && target != null && pattern.matcher(target).matches()) {
-            throw newE(args);
-        }
-    }
-
-    default void assertNotMatchesWithData(
-        CharSequence target,
-        Pattern pattern,
-        Object data,
-        Object... args
-    ) {
-        if (pattern != null && target != null && pattern.matcher(target).matches()) {
-            throw newEWithData(data, args);
-        }
-    }
-
     @Contract("!null,_,_->!null")
-    default <T extends CharSequence> T assertNotMatchesAndReturn(
-        CharSequence target,
-        Pattern pattern,
-        Object... args
+    default <T extends CharSequence> T assertNotMatches(
+        final CharSequence target,
+        final Pattern pattern,
+        final Object... args
     ) {
-        if (pattern != null && target != null && pattern.matcher(target).matches()) {
+        if (!doesNotMatch(pattern, target)) {
             throw newE(args);
         }
         //noinspection unchecked
@@ -389,13 +298,13 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("!null,_,_,_->!null")
-    default <T extends CharSequence> T assertNotMatchesWithDataAndReturn(
-        CharSequence target,
-        Pattern pattern,
-        Object data,
-        Object... args
+    default <T extends CharSequence> T assertNotMatchesWithData(
+        final CharSequence target,
+        final Pattern pattern,
+        final Object data,
+        final Object... args
     ) {
-        if (pattern != null && target != null && pattern.matcher(target).matches()) {
+        if (!doesNotMatch(pattern, target)) {
             throw newEWithData(data, args);
         }
         //noinspection unchecked
@@ -403,13 +312,13 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("!null,_,_,_->!null")
-    default <T extends CharSequence> T assertNotMatchesWithDataSupplierAndReturn(
-        CharSequence target,
-        Pattern pattern,
-        Supplier<Object> dataSupplier,
-        Object... args
+    default <T extends CharSequence> T assertNotMatchesWithDataSupplier(
+        final CharSequence target,
+        final Pattern pattern,
+        final Supplier<Object> dataSupplier,
+        final Object... args
     ) {
-        if (pattern != null && target != null && pattern.matcher(target).matches()) {
+        if (!doesNotMatch(pattern, target)) {
             throw newEWithData(dataSupplier.get(), args);
         }
         //noinspection unchecked
@@ -418,26 +327,8 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     // assert not empty
 
-    @Contract("null,_->fail")
-    default void assertNotEmpty(Iterable<?> target, Object... args) {
-        if (CollectionUtil.isEmpty(target)) {
-            throw newE(args);
-        }
-    }
-
-    @Contract("null,_,_->fail")
-    default void assertNotEmptyWithData(
-        Iterable<?> target,
-        Object data,
-        Object... args
-    ) {
-        if (CollectionUtil.isEmpty(target)) {
-            throw newEWithData(data, args);
-        }
-    }
-
     @Contract("null,_->fail;!null,_->!null")
-    default <T extends Iterable<?>> T assertNotEmptyAndReturn(Iterable<?> target, Object... args) {
+    default <T extends Iterable<?>> T assertNotEmpty(final Iterable<?> target, final Object... args) {
         if (CollectionUtil.isEmpty(target)) {
             throw newE(args);
         }
@@ -446,10 +337,10 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("null,_,_->fail;!null,_,_->!null")
-    default <T extends Iterable<?>> T assertNotEmptyWithDataAndReturn(
-        Iterable<?> target,
-        Object data,
-        Object... args
+    default <T extends Iterable<?>> T assertNotEmptyWithData(
+        final Iterable<?> target,
+        final Object data,
+        final Object... args
     ) {
         if (CollectionUtil.isEmpty(target)) {
             throw newEWithData(data, args);
@@ -459,10 +350,10 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
     }
 
     @Contract("null,_,_->fail;!null,_,_->!null")
-    default <T extends Iterable<?>> T assertNotEmptyWithDataSupplierAndReturn(
-        Iterable<?> target,
-        Supplier<Object> dataSupplier,
-        Object... args
+    default <T extends Iterable<?>> T assertNotEmptyWithDataSupplier(
+        final Iterable<?> target,
+        final Supplier<Object> dataSupplier,
+        final Object... args
     ) {
         if (CollectionUtil.isEmpty(target)) {
             throw newEWithData(dataSupplier.get(), args);
@@ -473,13 +364,17 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     // assert empty
 
-    default void assertEmpty(Iterable<?> target, Object... args) {
+    default void assertEmpty(final Iterable<?> target, final Object... args) {
         if (CollectionUtil.isNotEmpty(target)) {
             throw newE(args);
         }
     }
 
-    default void assertEmptyWithData(Iterable<?> target, Object data, Object... args) {
+    default void assertEmptyWithData(
+        final Iterable<?> target,
+        final Object data,
+        final Object... args
+    ) {
         if (CollectionUtil.isNotEmpty(target)) {
             throw newEWithData(data, args);
         }
@@ -487,47 +382,33 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
 
     // assert not empty
 
-    @Contract("null,_->fail")
-    default <T> void assertNotEmpty(T[] target, Object... args) {
+    @Contract("null,_->fail;!null,_->!null")
+    default <T> T[] assertNotEmpty(final Object[] target, final Object... args) {
         if (ArrayUtil.isEmpty(target)) {
             throw newE(args);
         }
+        //noinspection unchecked
+        return (T[]) target;
     }
 
-    @Contract("null,_,_->fail")
-    default void assertNotEmptyWithData(
-        Object[] target,
-        Object data,
-        Object... args
+    @Contract("null,_,_->fail;!null,_,_->!null")
+    default <T> T[] assertNotEmptyWithData(
+        final Object[] target,
+        final Object data,
+        final Object... args
     ) {
         if (ArrayUtil.isEmpty(target)) {
             throw newEWithData(data, args);
         }
-    }
-
-    @Contract("null,_->fail;!null,_->!null")
-    default <T> T[] assertNotEmptyAndReturn(Object[] target, Object... args) {
-        if (ArrayUtil.isEmpty(target)) {
-            throw newE(args);
-        }
         //noinspection unchecked
         return (T[]) target;
     }
 
     @Contract("null,_,_->fail;!null,_,_->!null")
-    default <T> T[] assertNotEmptyWithDataAndReturn(Object[] target, Object data, Object... args) {
-        if (ArrayUtil.isEmpty(target)) {
-            throw newEWithData(data, args);
-        }
-        //noinspection unchecked
-        return (T[]) target;
-    }
-
-    @Contract("null,_,_->fail;!null,_,_->!null")
-    default <T> T[] assertNotEmptyWithDataSupplierAndReturn(
-        Object[] target,
-        Supplier<Object> dataSupplier,
-        Object... args
+    default <T> T[] assertNotEmptyWithDataSupplier(
+        final Object[] target,
+        final Supplier<Object> dataSupplier,
+        final Object... args
     ) {
         if (ArrayUtil.isEmpty(target)) {
             throw newEWithData(dataSupplier.get(), args);
@@ -536,14 +417,10 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
         return (T[]) target;
     }
 
-    // return or wrapper exception
+    // assert supply successfully
 
-    @Contract("null,_->null")
-    default <T> T returnOrWrapperE(Supplier<T> supplier, Object... args) {
-        if (supplier == null) {
-            return null;
-        }
-
+    @Contract("null,_->fail")
+    default <T> T assertSupplySuccessfully(final Supplier<T> supplier, final Object... args) {
         try {
             return supplier.get();
         } catch (Exception e) {
@@ -551,16 +428,12 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
         }
     }
 
-    @Contract("null,_,_->null")
-    default <T> T returnOrWrapperEWithData(
-        Supplier<T> supplier,
-        Object data,
-        Object... args
+    @Contract("null,_,_->fail")
+    default <T> T assertSupplySuccessfullyWithData(
+        final Supplier<T> supplier,
+        final Object data,
+        final Object... args
     ) {
-        if (supplier == null) {
-            return null;
-        }
-
         try {
             return supplier.get();
         } catch (Exception e) {
@@ -568,13 +441,50 @@ public interface IAsserts<E extends BaseException> extends IExceptionSupplier<E>
         }
     }
 
-    // execute or wrapper exception
+    @Contract("null,_,_->fail")
+    default <T> T assertSupplySuccessfullyWithDataSupplier(
+        final Supplier<T> supplier,
+        final Supplier<Object> dataSupplier,
+        final Object... args
+    ) {
+        try {
+            return supplier.get();
+        } catch (Exception e) {
+            throw newEWithCauseAndData(e, dataSupplier.get(), args);
+        }
+    }
 
-    default void executeOrWrapperE(Executable executable, Object... args) {
+    // assert execute successfully
+
+    default void assertExecuteSuccessfully(final Executable executable, final Object... args) {
         try {
             executable.execute();
         } catch (Exception e) {
             throw newEWithCause(e, args);
+        }
+    }
+
+    default void assertExecuteSuccessfullyWithData(
+        final Executable executable,
+        final Object data,
+        final Object... args
+    ) {
+        try {
+            executable.execute();
+        } catch (Exception e) {
+            throw newEWithCauseAndData(e, data, args);
+        }
+    }
+
+    default void assertExecuteSuccessfullyWithDataSupplier(
+        final Executable executable,
+        final Supplier<Object> dataSupplier,
+        final Object... args
+    ) {
+        try {
+            executable.execute();
+        } catch (Exception e) {
+            throw newEWithCauseAndData(e, dataSupplier.get(), args);
         }
     }
 }

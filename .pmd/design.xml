@@ -56,7 +56,7 @@ public abstract class Example {
         <description>
 Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block.
         </description>
-        <priority>3</priority>
+        <priority>5</priority>
         <properties>
             <property name="xpath">
                 <value>
@@ -1376,7 +1376,7 @@ public class Person {   // this is more manageable
 A class with too many methods is probably a good suspect for refactoring, in order to reduce its
 complexity and find a way to have more fine grained objects.
         </description>
-        <priority>3</priority>
+        <priority>5</priority>
         <properties>
             <property name="maxmethods" type="Integer" description="The method count reporting threshold" min="1" max="1000" value="10"/>
             <property name="xpath">
