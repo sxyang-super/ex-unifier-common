@@ -158,7 +158,7 @@
                         <ruleset>category/java/security.xml</ruleset>
                     </rulesets>
                     <linkXRef>false</linkXRef>
-                    <minimumPriority>4</minimumPriority>
+                    <minimumPriority>5</minimumPriority>
                 </configuration>
             </plugin>
             <plugin>

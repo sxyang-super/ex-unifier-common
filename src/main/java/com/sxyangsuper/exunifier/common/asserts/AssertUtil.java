@@ -1,4 +1,4 @@
-package com.sxyangsuper.exunifier.common;
+package com.sxyangsuper.exunifier.common.asserts;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.NoArgsConstructor;

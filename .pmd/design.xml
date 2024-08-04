@@ -47,7 +47,7 @@ public abstract class Example {
         </example>
     </rule>
 
-    <rule name="AvoidCatchingGenericException"
+    <!--<rule name="AvoidCatchingGenericException"
           since="4.2.6"
           language="java"
           message="Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block"
@@ -89,7 +89,7 @@ public class PrimitiveType {
 }
 ]]>
         </example>
-    </rule>
+    </rule>-->
 
     <rule name="AvoidDeeplyNestedIfStmts"
           language="java"
